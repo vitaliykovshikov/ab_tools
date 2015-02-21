@@ -41,7 +41,8 @@ COMMON_APPS = [
 ]
 
 THIRD_PART_APPS = [
-    "djcelery",
+    'djcelery',
+    'celery_haystack'
 ]
 
 INSTALLED_APPS = COMMON_APPS + THIRD_PART_APPS + [
