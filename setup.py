@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='ab_tools',
     version='0.1',
-    packages=['tools.tools'],
+    packages=['ab_tools.advert', 'ab_tools.firm'],
     url='',
     license='',
     author='Dr.bleedjent',
