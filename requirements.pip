@@ -5,6 +5,8 @@ argparse==1.2.1
 billiard==3.3.0.19
 celery==3.1.17
 django-celery==3.1.16
+haystack==0.15
 kombu==3.0.24
+python-ptrace==0.8.1
 pytz==2014.10
 wsgiref==0.1.2
