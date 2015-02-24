@@ -11,5 +11,5 @@ except ImportError:
 def update_advert_task(object_pk, content_type_pk):
     instance = ContentType.objects.get(pk=content_type_pk).get_object_for_this_type(pk=object_pk)
     unified_index = haystack_connections['default'].get_unified_index()
-    index = unified_index.get_index(instance)
+    index = unified_index.get_index(instance.__class__)
     index.update_object(instance)
