@@ -9,8 +9,7 @@ setup(
     author='Dr.bleedjent',
     author_email='dr.bleedjent',
     description='Crossapps tools for all Avtobazar Apps',
-    install_requires=[
-        'requests',
-        'urlparse',
-    ]
+    # install_requires=[
+    #     'requests',
+    # ]
 )
