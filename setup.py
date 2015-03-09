@@ -12,5 +12,6 @@ setup(
     install_requires=[
         'requests',
         'mongoengine',
+        'django-registration==0.8',
     ]
 )
