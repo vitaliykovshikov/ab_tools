@@ -7,7 +7,7 @@ class AuthRouter(object):
         """
         Attempts to read auth models go to auth_db.
         """
-        if model._meta.app_label == 'auth':
+        if model._meta.app_label in ['auth', 'registration']:
             return 'auth_db'
         return None
 
@@ -15,7 +15,7 @@ class AuthRouter(object):
         """
         Attempts to write auth models go to auth_db.
         """
-        if model._meta.app_label == 'auth':
+        if model._meta.app_label in ['auth', 'registration']:
             return 'auth_db'
         return None
 
@@ -23,8 +23,8 @@ class AuthRouter(object):
         """
         Allow relations if a model in the auth app is involved.
         """
-        if obj1._meta.app_label == 'auth' or \
-           obj2._meta.app_label == 'auth':
+        if obj1._meta.app_label in ['auth', 'registration'] or \
+           obj2._meta.app_label in ['auth', 'registration']:
            return True
         return None
 
@@ -34,7 +34,7 @@ class AuthRouter(object):
         database.
         """
         if db == 'auth_db':
-            return model._meta.app_label == 'auth'
-        elif model._meta.app_label == 'auth':
+            return model._meta.app_label in ['auth', 'registration']
+        elif model._meta.app_label in ['auth', 'registration']:
             return False
         return None
