@@ -3,7 +3,11 @@ from jinja2 import Markup
 from jinja2 import contextfunction
 from django_jinja import library
 
+from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
+from django.db import connection
+
+from classifier.models import Classifier
 
 
 @library.global_function
@@ -36,3 +40,19 @@ def cache_control_tool(user, fragment_name, args, **kwargs):
         cache_key = make_template_fragment_key(fragment_name, args)
         return Markup(u'<a href="/ab_tools/cache/clean/%s/" class="btn btn-default">Обновить кеш</a>' % cache_key)
     return ''
+
+
+@library.global_function
+def get_make_model_rating(make):
+    cache_key = 'rating_of:%s' % make
+    rating = cache.get(cache_key)
+    if not rating:
+        cursor = connection.cursor()
+        cursor.execute("SELECT general_mark FROM reviews_carcomment WHERE make_id = %s AND publish = True" % make)
+        marks = cursor.fetchall()
+        if marks:
+            rating = round(sum([m[0] for m in marks])/float(len(marks)), 1)
+        else:
+            rating = 0
+        cache.set(cache_key, rating, 60*60*24)
+    return rating
