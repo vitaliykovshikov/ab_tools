@@ -5,7 +5,7 @@ from django_jinja import library
 
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
-from django.db import connection
+from django.db import connections
 
 
 @library.global_function
@@ -45,7 +45,7 @@ def get_make_model_rating(make):
     cache_key = 'rating_of:%s' % make
     rating = cache.get(cache_key)
     if not rating:
-        cursor = connection.cursor()
+        cursor = connections['classifier'].cursor()
         cursor.execute("SELECT general_mark FROM reviews_carcomment WHERE make_id = %s AND publish = True" % make)
         marks = cursor.fetchall()
         if marks:
