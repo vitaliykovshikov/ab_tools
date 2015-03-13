@@ -41,16 +41,20 @@ def cache_control_tool(user, fragment_name, args, **kwargs):
 
 
 @library.global_function
-def get_make_model_rating(make):
-    cache_key = 'rating_of:%s' % make
-    rating = cache.get(cache_key)
-    if not rating:
+def get_make_model_reviews(make):
+    cache_key = 'rating_of:%s' % make.pk
+    result = cache.get(cache_key)
+    if not result:
         cursor = connections['classifier'].cursor()
-        cursor.execute("SELECT general_mark FROM reviews_carcomment WHERE make_id = %s AND publish = True" % make)
-        marks = cursor.fetchall()
-        if marks:
-            rating = round(sum([m[0] for m in marks])/float(len(marks)), 1)
+        if make.lvl > 2:
+            cursor.execute("SELECT general_mark FROM reviews_carcomment WHERE make_id = %s AND publish = True" % make.pk)
         else:
-            rating = 0
-        cache.set(cache_key, rating, 60*60*24)
-    return rating
+            cursor.execute("SELECT general_mark FROM reviews_carcomment \
+                           INNER JOIN classifier_classifier ON (make_id = classifier_classifier.id) \
+                           WHERE classifier_classifier.parent_id = %s AND publish = True" % make.pk)
+        marks = cursor.fetchall()
+        rating = round(sum([m[0] for m in marks])/float(len(marks)), 1) if marks else 0
+        reviews_count = len(marks) if marks else 0
+        result = {'rating': rating, 'reviews_count': reviews_count}
+        cache.set(cache_key, result, 60*60*24)
+    return result
